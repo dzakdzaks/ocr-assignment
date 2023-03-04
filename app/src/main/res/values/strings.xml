@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">OCR</string>
+    <string name="close">Close</string>
+    <string name="image_preview">Image Preview</string>
+    <string name="next">Next</string>
+    <string name="result_text">Result Text</string>
+    <string name="distance">Distance</string>
+    <string name="estimated_time">Estimated Time</string>
+</resources>

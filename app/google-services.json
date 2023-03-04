@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "474803221462",
+    "project_id": "ocr-sawit-pro-assignment",
+    "storage_bucket": "ocr-sawit-pro-assignment.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:474803221462:android:f573f866153992483f6a77",
+        "android_client_info": {
+          "package_name": "com.dzakdzaks.ocr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "474803221462-s14c8qle7irtmqp18s9tfb687c25v6g4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dzakdzaks.ocr",
+            "certificate_hash": "212f6a6b66302d5bf8063a747f7dc249dd96145e"
+          }
+        },
+        {
+          "client_id": "474803221462-tt0u5umc72t0lhd8u0sojlk8qri8779r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRQO0_ivxFZTNmoLTi34CgPnMwJg7JvBA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "474803221462-tt0u5umc72t0lhd8u0sojlk8qri8779r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
