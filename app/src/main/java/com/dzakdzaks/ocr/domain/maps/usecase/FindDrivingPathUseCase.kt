@@ -5,5 +5,5 @@ import javax.inject.Inject
 
 class FindDrivingPathUseCase @Inject constructor(private val mapsRepository: MapsRepository) {
     operator fun invoke(origin: String, destination: String) =
-        mapsRepository.fetchDrivingPath(origin, destination)
+        mapsRepository.fetchDrivingPath(origin = origin, destination = destination)
 }

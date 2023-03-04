@@ -1,10 +1,11 @@
-package com.dzakdzaks.ocr
+package com.dzakdzaks.ocr.ui.main
 
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -29,6 +30,7 @@ import com.dzakdzaks.ocr.core.util.showSnackBarIndefinite
 import com.dzakdzaks.ocr.core.util.visibleGone
 import com.dzakdzaks.ocr.data.maps.api.model.Route
 import com.dzakdzaks.ocr.databinding.ActivityMainBinding
+import com.dzakdzaks.ocr.ui.second.SecondActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
@@ -108,8 +110,7 @@ class MainActivity : AppCompatActivity() {
     private fun initView() {
         supportActionBar?.hide()
         with(binding) {
-            onBackPressedDispatcher.addCallback(
-                this@MainActivity,
+            onBackPressedDispatcher.addCallback(this@MainActivity,
                 object : OnBackPressedCallback(true) {
                     override fun handleOnBackPressed() {
                         if (constraintPreview.isVisible) removePreview()
@@ -131,7 +132,15 @@ class MainActivity : AppCompatActivity() {
                     OCRResult.Empty -> {}
                     is OCRResult.Error -> it.let(::handleError)
                     OCRResult.Loading -> {}
-                    is OCRResult.Success -> it.data.route.let(::handleSuccess)
+                    is OCRResult.Success -> it.data.route.let(::getPathHandleSuccess)
+                }
+            }
+            this@MainActivity.collectLatestLifecycleFlow(uploadPath) {
+                when (it) {
+                    OCRResult.Empty -> {}
+                    is OCRResult.Error -> it.let(::handleError)
+                    OCRResult.Loading -> {}
+                    is OCRResult.Success -> it.data.let(::uploadPathHandleSuccess)
                 }
             }
             this@MainActivity.collectLatestLifecycleFlow(isLoading) {
@@ -145,19 +154,30 @@ class MainActivity : AppCompatActivity() {
         binding.root.showSnackBar(error.message)
     }
 
-    private fun handleSuccess(route: Route) {
-        viewModel.setIsLoading(false)
+    private fun getPathHandleSuccess(route: Route) {
         with(viewModel) {
             duration = route.duration
             distance = route.distance
+            uploadDrivingPath()
         }
+    }
+
+    private fun uploadPathHandleSuccess(string: String) {
+        viewModel.setIsLoading(false)
+        Toast.makeText(this, string, Toast.LENGTH_SHORT).show()
+        SecondActivity.start(
+            context = this@MainActivity,
+            resultText = viewModel.resultText,
+            duration = viewModel.duration,
+            distance = viewModel.distance,
+        )
+        removePreview()
     }
 
     private fun checkPermission() {
         PERMISSIONS.forEach { permission ->
             if (ContextCompat.checkSelfPermission(
-                    this,
-                    permission
+                    this, permission
                 ) == PackageManager.PERMISSION_DENIED
             ) {
                 requestMultiplePermissions.launch(PERMISSIONS)
@@ -225,14 +245,14 @@ class MainActivity : AppCompatActivity() {
             val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
             recognizer.process(image).addOnSuccessListener { resultText ->
-                    viewModel.resultText = resultText.text
-                    getLocationCurrent()
-                }.addOnFailureListener {
-                    it.printStackTrace()
-                    viewModel.setIsLoading(false)
-                }.addOnCompleteListener {
-                    recognizer.close()
-                }
+                viewModel.resultText = resultText.text
+                getLocationCurrent()
+            }.addOnFailureListener {
+                it.printStackTrace()
+                viewModel.setIsLoading(false)
+            }.addOnCompleteListener {
+                recognizer.close()
+            }
         } catch (e: IOException) {
             e.printStackTrace()
         }

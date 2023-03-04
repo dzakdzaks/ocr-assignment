@@ -10,6 +10,6 @@ fun PathResponse.toPath(): Path = Path(
 )
 
 fun RouteResponse.toRoute(): Route = Route(
-    distance = distance ?: 0,
-    duration = duration ?: 0,
+    distance = distance ?: 0L,
+    duration = duration ?: 0L,
 )

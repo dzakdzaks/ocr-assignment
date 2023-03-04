@@ -4,6 +4,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Route(
-    val distance: Int,
-    val duration: Int,
+    val distance: Long,
+    val duration: Long,
 )

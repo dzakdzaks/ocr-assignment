@@ -1,11 +1,13 @@
-package com.dzakdzaks.ocr
+package com.dzakdzaks.ocr.ui.main
 
 import android.location.Location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dzakdzaks.ocr.core.util.OCRResult
 import com.dzakdzaks.ocr.data.maps.api.model.Path
+import com.dzakdzaks.ocr.data.maps.api.model.RequestFirebaseResult
 import com.dzakdzaks.ocr.domain.maps.usecase.FindDrivingPathUseCase
+import com.dzakdzaks.ocr.domain.maps.usecase.UploadDrivingPathUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.File
 import javax.inject.Inject
@@ -17,6 +19,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val findDrivingPathUseCase: FindDrivingPathUseCase,
+    private val uploadDrivingPathUseCase: UploadDrivingPathUseCase,
 ) : ViewModel() {
 
     var photoFile: File? = null
@@ -25,18 +28,23 @@ class MainViewModel @Inject constructor(
 
     var currentLocation: Location? = null
 
-    var distance: Int = 0
+    var distance: Long = 0L
 
-    var duration: Int = 0
+    var duration: Long = 0L
 
     private val _path =
         MutableStateFlow<OCRResult<Path>>(OCRResult.Empty)
     val path: StateFlow<OCRResult<Path>> = _path
 
+    private val _uploadPath =
+        MutableStateFlow<OCRResult<String>>(OCRResult.Empty)
+    val uploadPath: StateFlow<OCRResult<String>> = _uploadPath
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
     private var pathJob: Job? = null
+    private var uploadPathJob: Job? = null
 
     fun loadFindDrivingPath() {
         currentLocation?.let {
@@ -48,6 +56,26 @@ class MainViewModel @Inject constructor(
                     destination = PLAZA_INDONESIA_LAT_LNG
                 ).collect {
                     _path.value = it
+                }
+            }
+        }
+    }
+
+    fun uploadDrivingPath() {
+        currentLocation?.let {
+            uploadPathJob?.cancel()
+            uploadPathJob = viewModelScope.launch {
+                uploadDrivingPathUseCase(
+                    request = RequestFirebaseResult(
+                        origin = "${it.latitude},${it.longitude}",
+                        destination = PLAZA_INDONESIA_LAT_LNG,
+                        resultText = resultText,
+                        duration = duration,
+                        distance = distance,
+                    )
+
+                ).collect {
+                    _uploadPath.value = it
                 }
             }
         }
@@ -66,7 +94,7 @@ class MainViewModel @Inject constructor(
     }
 
     companion object {
-        private const val PLAZA_INDONESIA_LAT_LNG = "-6.193859700000001,106.8219662"
+        private const val PLAZA_INDONESIA_LAT_LNG = "-6.1930672,106.8217313"
     }
 
 }

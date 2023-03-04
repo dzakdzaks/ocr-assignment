@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Matrix
-import androidx.exifinterface.media.ExifInterface
 import android.net.Uri
 import android.provider.MediaStore
 import android.provider.Settings
@@ -12,6 +11,7 @@ import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
+import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -30,7 +30,7 @@ import kotlinx.coroutines.withContext
 
 fun <T> ComponentActivity.collectLatestLifecycleFlow(flow: Flow<T>, collect: suspend (T) -> Unit) {
     lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.STARTED) {
+        repeatOnLifecycle(Lifecycle.State.CREATED) {
             flow.collectLatest(collect)
         }
     }
@@ -117,4 +117,24 @@ suspend fun Context.rotateImageCorrectly(photoFile: File) = withContext(Dispatch
 
     sourceBitmap.recycle()
     rotatedBitmap.recycle()
+}
+
+fun String.isEmptyOrBlank(): Boolean = isEmpty() && isBlank()
+
+/** Int is second*/
+fun Long.toReadableHour(): String {
+    val hours = this / 3_600L
+    val minutes = this % 3_600L / 60L
+    val seconds = this % 60L
+    return String.format("%02d Hour %02d Minutes %02d Seconds ", hours, minutes, seconds)
+}
+
+/** Int is meter*/
+fun Long.toKiloMeter(): String {
+    if (this < 1_000L) return "$this Meter"
+    val km = this.toDouble() / 1_000L
+    val number3digits: Double = String.format("%.3f", km).toDouble()
+    val number2digits: Double = String.format("%.2f", number3digits).toDouble()
+    val solution: Double = String.format("%.1f", number2digits).toDouble()
+    return "$solution Kilometer"
 }

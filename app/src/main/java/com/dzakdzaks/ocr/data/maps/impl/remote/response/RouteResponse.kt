@@ -5,6 +5,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class RouteResponse(
-    @field:Json(name = "distance") val distance: Int? = null,
-    @field:Json(name = "duration") val duration: Int? = null,
+    @field:Json(name = "distance") val distance: Long? = null,
+    @field:Json(name = "duration") val duration: Long? = null,
 )
