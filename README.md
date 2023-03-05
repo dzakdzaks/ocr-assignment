@@ -13,6 +13,8 @@ This is an assignment single module clean architecture project using MLKit Text 
 - [CameraX](https://developer.android.com/training/camerax)
 - [Firebase Firestore](https://firebase.google.com/docs/firestore)
 
-## Preview
-![Video Preview](/resource/OCR.mp4)
+## Video Preview
+[<img src="https://i.ytimg.com/vi/2F8UZd30vmY/maxresdefault.jpg" width="50%">](https://www.youtube.com/shorts/2F8UZd30vmY "Preview Video")
+
+## Firestore Preview
 ![Firestore Preview](/resource/firestore.png)
