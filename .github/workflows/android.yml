@@ -18,9 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set current date as env variable
-        run: echo "date_today=$(date +'%Y-%m-%d_%h-%m-%s')" >> $GITHUB_ENV
-
       - name: Get Tag
         id: var
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
@@ -81,8 +78,8 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ env.date_today }}
-          release_name: Release ${{ env.date_today }}
+          tag_name: Tag ${{ github.event.repository.updated_at}}
+          release_name: Release ${{ github.event.repository.updated_at}}
           body: ${{ steps.changelog.outputs.changelog }} &#x20;
         env:
           GITHUB_TOKEN: ${{ github.token }}
