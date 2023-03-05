@@ -14,7 +14,7 @@ This is an assignment single module clean architecture project using MLKit Text 
 - [Firebase Firestore](https://firebase.google.com/docs/firestore)
 
 ## Video Preview
-[<img src="https://i.ytimg.com/vi/2F8UZd30vmY/maxresdefault.jpg" width="50%">](https://www.youtube.com/shorts/2F8UZd30vmY "Preview Video")
+[<img src="https://i.ytimg.com/vi/uYCOlem03bM/maxresdefault.jpg" width="50%">](https://www.youtube.com/shorts/uYCOlem03bM "Preview Video")
 
 ## Firestore Preview
 ![Firestore Preview](/resource/firestore.png)
