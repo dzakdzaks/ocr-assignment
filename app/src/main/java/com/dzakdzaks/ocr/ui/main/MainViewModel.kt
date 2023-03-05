@@ -13,7 +13,7 @@ import java.io.File
 import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -34,14 +34,14 @@ class MainViewModel @Inject constructor(
 
     private val _path =
         MutableStateFlow<OCRResult<Path>>(OCRResult.Empty)
-    val path: StateFlow<OCRResult<Path>> = _path
+    val path = _path.asStateFlow()
 
     private val _uploadPath =
         MutableStateFlow<OCRResult<String>>(OCRResult.Empty)
-    val uploadPath: StateFlow<OCRResult<String>> = _uploadPath
+    val uploadPath = _uploadPath.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading
+    val isLoading = _isLoading.asStateFlow()
 
     private var pathJob: Job? = null
     private var uploadPathJob: Job? = null

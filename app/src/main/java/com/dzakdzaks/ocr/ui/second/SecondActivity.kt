@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import com.dzakdzaks.ocr.core.util.collectLatestLifecycleFlow
 import com.dzakdzaks.ocr.core.util.isEmptyOrBlank
 import com.dzakdzaks.ocr.core.util.toKiloMeter
 import com.dzakdzaks.ocr.core.util.toReadableHour
@@ -24,7 +25,7 @@ class SecondActivity : AppCompatActivity() {
         binding = ActivitySecondBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initView()
-        observe()
+        collectData()
     }
 
     private fun initView() {
@@ -46,16 +47,16 @@ class SecondActivity : AppCompatActivity() {
         }
     }
 
-    private fun observe() {
+    private fun collectData() {
         with(binding) {
             with(viewModel) {
-                resultText.observe(this@SecondActivity) {
+                this@SecondActivity.collectLatestLifecycleFlow(resultText) {
                     fieldResultText.editText?.setText(it)
                 }
-                distance.observe(this@SecondActivity) {
+                this@SecondActivity.collectLatestLifecycleFlow(distance) {
                     fieldDistance.editText?.setText(it.toString())
                 }
-                duration.observe(this@SecondActivity) {
+                this@SecondActivity.collectLatestLifecycleFlow(duration) {
                     fieldDuration.editText?.setText(it.toString())
                 }
             }
